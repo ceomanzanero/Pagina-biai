@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Arcoíris de la Innovación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        .kpi-card {
+             background-color: #003f5c;
+             color: white;
+        }
+        .kpi-number {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ef5675;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <header class="text-center my-8 md:my-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#003f5c]">El Arcoíris de la Innovación</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Un marco para entender que la innovación va más allá del producto, abarcando todo el ecosistema de una empresa para crear una ventaja competitiva sostenible.</p>
+        </header>
+
+        <main>
+            <section class="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-12">
+                <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">El Espectro Completo de la Innovación</h2>
+                 <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">El "Arcoíris de la Innovación" visualiza las diferentes áreas donde una empresa puede innovar. El verdadero potencial disruptivo se encuentra al combinar innovaciones en tres grandes categorías: la configuración interna, la oferta de mercado y la experiencia del cliente.</p>
+                <div class="chart-container !h-48 md:!h-64">
+                    <canvas id="innovationSpectrumChart"></canvas>
+                </div>
+            </section>
+            
+            <section id="experience-innovation" class="mb-12">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#003f5c]">Profundizando en la Innovación Centrada en la Experiencia</h2>
+                    <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Esta categoría se enfoca en cómo los clientes interactúan con la empresa y sus productos. No se trata de QUÉ vendes, sino de CÓMO lo vendes y cómo haces sentir al cliente en cada punto de contacto. Es una de las formas más poderosas de crear lealtad.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white rounded-lg shadow-xl p-6 md:p-8">
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Componentes Clave de la Experiencia</h3>
+                        <p class="text-gray-600 mb-6">La innovación en la experiencia se compone de varias dimensiones que trabajan juntas para crear una interacción memorable. Estas áreas son donde las marcas líderes construyen su ventaja competitiva.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-2xl text-[#ff6361] mr-3 font-bold">›</span>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Servicio</h4>
+                                    <p class="text-gray-600">Mejorar la calidad y eficiencia del soporte, convirtiendo el servicio al cliente en un motor de valor.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-2xl text-[#ff6361] mr-3 font-bold">›</span>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Canal</h4>
+                                    <p class="text-gray-600">Reinventar cómo y dónde los clientes acceden a tus ofertas, creando rutas de compra más convenientes.</p>
+                                </div>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-2xl text-[#ff6361] mr-3 font-bold">›</span>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Marca</h4>
+                                    <p class="text-gray-600">Gestionar la promesa que tu empresa representa, creando una conexión emocional profunda con tu audiencia.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-2xl text-[#ff6361] mr-3 font-bold">›</span>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Interacción con el Cliente</h4>
+                                    <p class="text-gray-600">Desarrollar interacciones significativas que fomenten una comunidad y un sentido de pertenencia.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                     <div class="bg-white rounded-lg shadow-xl p-6 md:p-8">
+                        <h3 class="text-2xl font-bold text-center text-[#003f5c] mb-4">Impacto de la Innovación en la Experiencia</h3>
+                         <p class="text-gray-600 mb-6 text-center">Una experiencia de cliente superior impacta directamente en métricas clave de negocio, desde la retención hasta la percepción de la marca.</p>
+                        <div class="chart-container !h-80 md:!h-96">
+                            <canvas id="experienceDoughnutChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-12">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#003f5c]">Ejemplos en Acción: Transformando Industrias</h2>
+                    <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Estas empresas revolucionaron sus mercados al innovar fundamentalmente en la experiencia del cliente, no solo en sus productos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 text-center">
+                         <div class="text-6xl mb-4">📱</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c]">Apple y el Retail</h3>
+                        <p class="text-gray-600 mt-2"><strong class="text-gray-800">Innovación:</strong> Canal y Servicio. Las Apple Stores se convirtieron en centros de experiencia, transformando la compra de tecnología en una interacción de marca inmersiva con su Genius Bar y su diseño centrado en el usuario.</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 text-center">
+                        <div class="text-6xl mb-4">👟</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c]">Nike y la Comunidad</h3>
+                        <p class="text-gray-600 mt-2"><strong class="text-gray-800">Innovación:</strong> Marca e Interacción. Con apps como Nike+, crearon un ecosistema digital que fomenta una comunidad global, conectando su marca directamente con el estilo de vida y las metas de sus clientes.</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 text-center">
+                         <div class="text-6xl mb-4">☕</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c]">Starbucks y el Tercer Lugar</h3>
+                        <p class="text-gray-600 mt-2"><strong class="text-gray-800">Innovación:</strong> Servicio y Canal. Starbucks vendió una experiencia, no solo café. Se posicionó como el "tercer lugar" entre el hogar y el trabajo, y modernizó el canal con pedidos móviles para una conveniencia superior.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gemini-feature" class="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-12">
+                 <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold text-[#003f5c]">Generador de Ideas de Innovación</h2>
+                    <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Introduce tu industria o tipo de negocio y deja que la IA te inspire con ideas para innovar en la experiencia de tus clientes.</p>
+                </div>
+                <div class="max-w-xl mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="industry-input" placeholder="Ej: cafeterías, gimnasios, ecommerce de moda" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#58508d] focus:outline-none">
+                        <button id="generate-ideas-btn" class="bg-[#ef5675] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#d83c5a] transition duration-300 flex items-center justify-center">
+                            ✨ Generar Ideas
+                        </button>
+                    </div>
+                </div>
+                <div id="loader-container" class="flex justify-center mt-8 hidden">
+                    <div class="loader"></div>
+                </div>
+                <div id="results-container" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                </div>
+                 <div id="error-container" class="text-center mt-8 text-red-600 hidden">
+                    <p>Lo sentimos, ha ocurrido un error. Por favor, inténtalo de nuevo.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-200">
+            <p class="text-gray-500">Infografía sobre el Arcoíris de la Innovación</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const wrapLabel = (label) => {
+                const maxLength = 16;
+                if (typeof label !== 'string' || label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + ' ' + word).trim().length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                });
+                if (currentLine) {
+                    lines.push(currentLine.trim());
+                }
+                return lines;
+            };
+            
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                if (!item || !item.chart || !item.chart.data || !item.chart.data.labels) return '';
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            };
+
+            const spectrumCtx = document.getElementById('innovationSpectrumChart').getContext('2d');
+            new Chart(spectrumCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Áreas de Innovación'],
+                    datasets: [{
+                        label: 'Configuración', data: [33.3], backgroundColor: '#003f5c', barPercentage: 0.8,
+                    }, {
+                        label: 'Oferta', data: [33.3], backgroundColor: '#7a5195', barPercentage: 0.8,
+                    }, {
+                        label: 'Experiencia', data: [33.4], backgroundColor: '#ef5675', barPercentage: 0.8,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, display: false, grid: { display: false } },
+                        y: { stacked: true, display: false, grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 14 }, usePointStyle: true, boxWidth: 8 } },
+                        tooltip: { callbacks: { title: tooltipTitleCallback } }
+                    }
+                }
+            });
+
+            const experienceCtx = document.getElementById('experienceDoughnutChart').getContext('2d');
+            const experienceLabels = ['Mayor Retención de Clientes', 'Lealtad de Marca Fortalecida', 'Diferenciación Competitiva', 'Percepción de Precios Premium'];
+            new Chart(experienceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: experienceLabels.map(wrapLabel),
+                    datasets: [{
+                        label: 'Resultados de la Experiencia', data: [35, 30, 20, 15],
+                        backgroundColor: ['#003f5c', '#58508d', '#bc5090', '#ff6361'],
+                        borderColor: '#ffffff', borderWidth: 4, hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 12 }, boxWidth: 20, padding: 15 } },
+                        tooltip: { callbacks: { title: tooltipTitleCallback } }
+                    }
+                }
+            });
+
+            const generateBtn = document.getElementById('generate-ideas-btn');
+            const industryInput = document.getElementById('industry-input');
+            const loader = document.getElementById('loader-container');
+            const resultsContainer = document.getElementById('results-container');
+            const errorContainer = document.getElementById('error-container');
+
+            generateBtn.addEventListener('click', async () => {
+                const industry = industryInput.value.trim();
+                if (!industry) {
+                    alert('Por favor, introduce una industria.');
+                    return;
+                }
+                
+                loader.classList.remove('hidden');
+                resultsContainer.innerHTML = '';
+                errorContainer.classList.add('hidden');
+                generateBtn.disabled = true;
+
+                try {
+                    const ideas = await generateInnovationIdeas(industry);
+                    displayIdeas(ideas);
+                } catch (error) {
+                    console.error('Error generating ideas:', error);
+                    errorContainer.classList.remove('hidden');
+                } finally {
+                    loader.classList.add('hidden');
+                    generateBtn.disabled = false;
+                }
+            });
+
+            async function generateInnovationIdeas(industry) {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const systemPrompt = `
+                    Actúa como un consultor de innovación experto. Tu tarea es generar ideas creativas para una industria específica, enfocándote EXCLUSIVAMENTE en la categoría de "Experiencia" del Arcoíris de la Innovación.
+                    Las ideas deben clasificarse en una de estas cuatro subcategorías: Servicio, Canal, Marca, o Interacción con el Cliente.
+                    Proporciona 4 ideas en total, una para cada subcategoría.
+                    La respuesta DEBE ser un objeto JSON válido con la siguiente estructura: {"ideas": [{"categoria": "Subcategoría", "idea": "Descripción de la idea."}]}. No incluyas nada fuera del objeto JSON.
+                `;
+                
+                const userQuery = `Genera ideas de innovación en la experiencia para la industria: ${industry}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+
+                let response;
+                let attempts = 0;
+                const maxAttempts = 5;
+                let delay = 1000;
+
+                while(attempts < maxAttempts){
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            const candidate = result.candidates?.[0];
+                            if (candidate && candidate.content?.parts?.[0]?.text) {
+                                const textResponse = candidate.content.parts[0].text;
+                                const cleanedText = textResponse.replace(/```json|```/g, '').trim();
+                                const parsedJson = JSON.parse(cleanedText);
+                                return parsedJson.ideas || [];
+                            }
+                        }
+                        // If response not ok or structure is wrong, it will be caught and retried
+                    } catch (e) {
+                         // This will catch fetch errors and JSON parsing errors
+                         console.error(`Attempt ${attempts + 1} failed:`, e);
+                    }
+                    
+                    attempts++;
+                    if(attempts < maxAttempts) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential backoff
+                    } else {
+                         throw new Error("API request failed after multiple retries.");
+                    }
+                }
+                return []; // Should not be reached if error is thrown
+            }
+
+            function displayIdeas(ideas) {
+                resultsContainer.innerHTML = '';
+                 if (!ideas || ideas.length === 0) {
+                    errorContainer.classList.remove('hidden');
+                    return;
+                }
+                
+                const categoryColors = {
+                    'Servicio': 'bg-blue-100 border-blue-500',
+                    'Canal': 'bg-purple-100 border-purple-500',
+                    'Marca': 'bg-pink-100 border-pink-500',
+                    'Interacción con el Cliente': 'bg-red-100 border-red-500'
+                };
+
+                ideas.forEach(item => {
+                    const colorClasses = categoryColors[item.categoria] || 'bg-gray-100 border-gray-500';
+                    const card = document.createElement('div');
+                    card.className = `p-6 rounded-lg border-l-4 ${colorClasses}`;
+                    card.innerHTML = `
+                        <h4 class="font-bold text-lg text-gray-800">${item.categoria}</h4>
+                        <p class="text-gray-600 mt-2">${item.idea}</p>
+                    `;
+                    resultsContainer.appendChild(card);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
+
