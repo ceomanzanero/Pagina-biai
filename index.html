@@ -3,322 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto Final: BI con IA Generativa | Tu Nombre</title>
+    <title>Proyecto PriceTravel: BI con IA Generativa</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Azul oscuro (#0A2342), Blanco (#FFFFFF), Acento Naranja (#FF8C42), Fondo Gris Claro (#F3F4F6) -->
+    <!-- Application Structure Plan: He diseñado una aplicación de una sola página con una estructura temática y un flujo narrativo. En lugar de seguir el orden del documento, la aplicación agrupa la información en secciones lógicas: Problema, Solución, Plan del Piloto, Impacto y Riesgos. Esta arquitectura permite al usuario comprender rápidamente el "porqué", el "qué", el "cómo" y el "qué pasaría si" del proyecto. La navegación fija facilita el salto entre temas, promoviendo una exploración no lineal y centrada en el usuario, lo que es más efectivo que un formato de presentación lineal para comunicar un proyecto complejo. -->
+    <!-- Visualization & Content Choices: 
+        1. Problema (Proceso Actual vs. Propuesto): Report Info -> Describir el cuello de botella actual. Goal -> Comparar. Viz/Presentation -> Diagrama interactivo HTML/CSS. Interaction -> Botón para alternar vistas. Justification -> Visualiza de forma instantánea y dramática la mejora en eficiencia, el núcleo del proyecto. Library/Method -> Vanilla JS.
+        2. Metodología (Fases del Proyecto): Report Info -> Describir el plan de 5 meses. Goal -> Organizar/Cambio. Viz/Presentation -> Línea de tiempo interactiva HTML/CSS. Interaction -> Hover para mostrar detalles de cada fase. Justification -> Presenta un proceso complejo de manera secuencial y digerible. Library/Method -> Vanilla JS.
+        3. Impacto (Tiempo de Análisis): Report Info -> Reducción de semanas a minutos. Goal -> Comparar. Viz/Presentation -> Gráfico de barras. Interaction -> Tooltips al pasar el ratón. Justification -> Cuantifica el beneficio más significativo del proyecto de una manera visualmente potente. Library/Method -> Chart.js.
+        4. Riesgos y Mitigación: Report Info -> Detallar los riesgos y sus soluciones. Goal -> Informar/Organizar. Viz/Presentation -> Tarjetas interactivas. Interaction -> Clic para revelar la mitigación. Justification -> Fomenta la participación del usuario y presenta la información densa de manera segmentada. Library/Method -> Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #111827; /* Gris oscuro casi negro */
-            color: #E5E7EB; /* Gris claro para texto */
+            font-family: 'Lato', sans-serif;
+            background-color: #F3F4F6;
+            color: #1F2937;
         }
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
-        .glass-effect {
-            background: rgba(23, 37, 62, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
         }
-        .accent-color { color: #2DD4BF; } /* Teal vibrante */
-        .bg-accent-color { background-color: #2DD4BF; }
-        .border-accent-color { border-color: #2DD4BF; }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .custom-card {
+            transition: all 0.3s ease-in-out;
+            transform-style: preserve-3d;
+        }
+        .custom-card.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .timeline-item-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .timeline-dot:hover + .timeline-item-content {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-gray-100">
 
-    <!-- Header / Navegación -->
-    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white">
-                Proyecto <span class="accent-color">BI & IA</span>
-            </a>
-            <div class="hidden md:flex space-x-8">
-                <a href="#resumen" class="hover:accent-color transition-colors">Resumen</a>
-                <a href="#metodologia" class="hover:accent-color transition-colors">Metodología</a>
-                <a href="#proceso" class="hover:accent-color transition-colors">Proceso</a>
-                <a href="#resultados" class="hover:accent-color transition-colors">Resultados</a>
-                <a href="#contacto" class="hover:accent-color transition-colors">Contacto</a>
+    <header class="bg-[#0A2342] text-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold">PriceTravel BI Pilot</h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#problema" class="hover:text-[#FF8C42] transition-colors">El Problema</a>
+                <a href="#solucion" class="hover:text-[#FF8C42] transition-colors">La Solución</a>
+                <a href="#piloto" class="hover:text-[#FF8C42] transition-colors">El Piloto</a>
+                <a href="#impacto" class="hover:text-[#FF8C42] transition-colors">Impacto</a>
+                <a href="#riesgos" class="hover:text-[#FF8C42] transition-colors">Riesgos</a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-white">
-                <i data-lucide="menu"></i>
+             <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                <span class="text-2xl">☰</span>
             </button>
         </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-[#0A2342] py-2">
+            <a href="#problema" class="block px-6 py-2 hover:bg-[#FF8C42]">El Problema</a>
+            <a href="#solucion" class="block px-6 py-2 hover:bg-[#FF8C42]">La Solución</a>
+            <a href="#piloto" class="block px-6 py-2 hover:bg-[#FF8C42]">El Piloto</a>
+            <a href="#impacto" class="block px-6 py-2 hover:bg-[#FF8C42]">Impacto</a>
+            <a href="#riesgos" class="block px-6 py-2 hover:bg-[#FF8C42]">Riesgos</a>
+        </div>
     </header>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden fixed top-0 left-0 w-full h-full bg-gray-900/95 z-40">
-        <div class="flex flex-col items-center justify-center h-full space-y-8">
-            <a href="#resumen" class="text-2xl hover:accent-color transition-colors mobile-link">Resumen</a>
-            <a href="#metodologia" class="text-2xl hover:accent-color transition-colors mobile-link">Metodología</a>
-            <a href="#proceso" class="text-2xl hover:accent-color transition-colors mobile-link">Proceso</a>
-            <a href="#resultados" class="text-2xl hover:accent-color transition-colors mobile-link">Resultados</a>
-            <a href="#contacto" class="text-2xl hover:accent-color transition-colors mobile-link">Contacto</a>
-        </div>
-    </div>
-
-
-    <main>
-        <!-- Sección Hero -->
-        <section id="hero" class="min-h-screen flex items-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
-            <div class="absolute inset-0 bg-gray-900/80"></div>
-            <div class="container mx-auto px-6 text-center relative z-10">
-                <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-4">Implementación Piloto de Business Intelligence con IA Generativa</h1>
-                <p class="text-xl md:text-2xl accent-color mb-8">Aplicado a una Empresa de Viajes con Amazon QuickSight Q</p>
-                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Un proyecto final para la Maestría en Analítica e Inteligencia de Negocios.</p>
-                <p class="text-lg font-semibold text-white mt-4">Por: [Tu Nombre Completo]</p>
-            </div>
+    <main class="container mx-auto p-4 md:p-8">
+        <section id="hero" class="text-center py-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-[#0A2342] leading-tight">Implementación Piloto de Business Intelligence con IA Generativa</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Un proyecto para transformar la toma de decisiones en <span class="font-bold text-[#FF8C42]">PriceTravel</span>, reduciendo el ciclo de análisis de semanas a minutos.</p>
         </section>
 
-        <!-- Resumen del Proyecto -->
-        <section id="resumen" class="py-20 md:py-32">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Resumen del <span class="accent-color">Proyecto</span></h2>
-                    <div class="w-24 h-1 bg-accent-color mx-auto mt-4"></div>
-                </div>
-                <div class="max-w-4xl mx-auto text-lg text-gray-300 leading-relaxed">
-                    <p class="mb-6">
-                        Este proyecto aborda el desafío de democratizar el acceso a los datos en una empresa de viajes, permitiendo a los usuarios de negocio obtener insights valiosos sin depender de equipos técnicos. La solución se centra en la implementación de una plataforma de Business Intelligence (BI) moderna, potenciada por Inteligencia Artificial Generativa.
-                    </p>
-                    <p>
-                        Utilizando <strong class="accent-color">Amazon QuickSight Q</strong>, se desarrolló un piloto que permite a los directivos y analistas realizar consultas complejas sobre los datos de ventas, operaciones y clientes utilizando lenguaje natural. El sistema interpreta las preguntas y genera visualizaciones y respuestas al instante, transformando la manera en que la organización interactúa con su información y toma decisiones estratégicas.
-                    </p>
-                </div>
+        <section id="problema" class="py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#0A2342]">El Problema: Una Brecha Crítica entre Datos y Decisión</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-600">PriceTravel posee una vasta cantidad de datos, pero el proceso para transformarlos en insights es lento y crea cuellos de botella. Esto retrasa decisiones críticas y resulta en oportunidades de mercado perdidas.</p>
             </div>
-        </section>
 
-        <!-- Metodología y Tecnologías -->
-        <section id="metodologia" class="py-20 md:py-32 bg-gray-900">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Metodología y <span class="accent-color">Tecnologías</span></h2>
-                    <div class="w-24 h-1 bg-accent-color mx-auto mt-4"></div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex justify-center mb-6">
+                    <button id="toggleProcessBtn" class="bg-[#0A2342] text-white font-bold py-2 px-6 rounded-lg hover:bg-[#FF8C42] transition-all">Ver el Nuevo Proceso ⚡</button>
                 </div>
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-white mb-4">Nuestro Enfoque</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">
-                            Se siguió una metodología ágil, adaptando el marco de trabajo <strong class="text-white">CRISP-DM</strong> (Cross-Industry Standard Process for Data Mining) para un proyecto de BI. Esto nos permitió iterar rápidamente desde la comprensión del negocio y los datos hasta la evaluación y despliegue del piloto.
-                        </p>
-                        <ul class="space-y-3 text-gray-300">
-                            <li class="flex items-center"><i data-lucide="check-circle" class="w-5 h-5 accent-color mr-3"></i>Comprensión del Negocio</li>
-                            <li class="flex items-center"><i data-lucide="check-circle" class="w-5 h-5 accent-color mr-3"></i>Preparación de Datos (ETL)</li>
-                            <li class="flex items-center"><i data-lucide="check-circle" class="w-5 h-5 accent-color mr-3"></i>Modelado y Visualización</li>
-                            <li class="flex items-center"><i data-lucide="check-circle" class="w-5 h-5 accent-color mr-3"></i>Integración de IA Generativa</li>
-                            <li class="flex items-center"><i data-lucide="check-circle" class="w-5 h-5 accent-color mr-3"></i>Evaluación y Feedback</li>
-                        </ul>
+                <div id="process-container">
+                    <!-- Vista Proceso Actual -->
+                    <div id="proceso-actual">
+                        <h3 class="text-xl font-bold text-center mb-4 text-red-600">Flujo Actual: Lento y Complejo</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center text-center">
+                            <div class="p-4 bg-gray-100 rounded-lg"><span class="text-2xl">📊</span><p>1. Necesidad de Análisis</p></div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="p-4 bg-gray-100 rounded-lg"><span class="text-2xl">🎫</span><p>2. Ticket a BI/TI</p></div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="p-4 bg-red-100 rounded-lg"><span class="text-2xl">⏳</span><p>3. Espera (Días/Semanas)</p></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center mt-4">
+                            <div class="p-4 bg-gray-100 rounded-lg"><span class="text-2xl">📋</span><p>4. Reporte Estático</p></div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="p-4 bg-red-100 rounded-lg"><span class="text-2xl">📉</span><p>5. Oportunidad Perdida</p></div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-white mb-4">Stack Tecnológico</h3>
-                        <div class="space-y-4">
-                            <div class="glass-effect p-4 rounded-lg flex items-center space-x-4">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS Logo" class="w-12 h-12">
-                                <div>
-                                    <h4 class="font-bold text-white">Amazon Web Services (AWS)</h4>
-                                    <p class="text-sm text-gray-400">Ecosistema cloud para toda la solución.</p>
-                                </div>
-                            </div>
-                            <div class="glass-effect p-4 rounded-lg flex items-center space-x-4">
-                                <img src="https://d1.awsstatic.com/product-marketing/QuickSight/quicksight-logo-2x.a90c135ea1505d4e164c4c9807b20468962c3e1b.png" alt="QuickSight Logo" class="w-12 h-12 p-1 bg-white rounded">
-                                <div>
-                                    <h4 class="font-bold text-white">Amazon QuickSight Q</h4>
-                                    <p class="text-sm text-gray-400">Herramienta de BI con capacidades de NLP.</p>
-                                </div>
-                            </div>
-                             <div class="glass-effect p-4 rounded-lg flex items-center space-x-4">
-                                <img src="https://d1.awsstatic.com/product-marketing/S3/AWS-S3-Logo-2x.d9a282433d9f3b3b0813f360775d7146ce2a221f.png" alt="S3 Logo" class="w-12 h-12 p-1 bg-white rounded">
-                                <div>
-                                    <h4 class="font-bold text-white">Amazon S3 & Glue</h4>
-                                    <p class="text-sm text-gray-400">Data Lake y servicio de ETL.</p>
-                                </div>
-                            </div>
+                    <!-- Vista Proceso Nuevo -->
+                    <div id="proceso-nuevo" class="hidden">
+                        <h3 class="text-xl font-bold text-center mb-4 text-green-600">Flujo Propuesto: Rápido e Interactivo</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center text-center">
+                            <div class="p-4 bg-gray-100 rounded-lg"><span class="text-2xl">❓</span><p>1. Pregunta de Negocio en Lenguaje Natural</p></div>
+                            <div class="text-2xl text-gray-400">→</div>
+                            <div class="p-4 bg-green-100 rounded-lg"><span class="text-2xl">💡</span><p>2. Respuesta Visual e Instantánea</p></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Proceso del Proyecto -->
-        <section id="proceso" class="py-20 md:py-32">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Fases del <span class="accent-color">Proyecto</span></h2>
-                    <div class="w-24 h-1 bg-accent-color mx-auto mt-4"></div>
+        <section id="solucion" class="py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#0A2342]">La Solución: IA Generativa para Democratizar los Datos</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-600">Se propone implementar <span class="font-bold">Amazon QuickSight Q</span>, una plataforma de BI que permite a los usuarios "conversar" con los datos. Esto elimina la dependencia de equipos técnicos y empodera a los empleados para ser autosuficientes en sus análisis.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">🗣️</div>
+                    <h3 class="text-xl font-bold mb-2">Lenguaje Natural</h3>
+                    <p>Realiza consultas complejas haciendo preguntas simples, como "¿Cuáles fueron las ventas de hoteles en Cancún el último mes?".</p>
                 </div>
-                <!-- Timeline -->
-                <div class="relative max-w-4xl mx-auto">
-                    <div class="absolute left-1/2 w-0.5 h-full bg-gray-700 hidden md:block"></div>
-                    
-                    <!-- Item 1 -->
-                    <div class="relative mb-8 md:flex items-center md:justify-end">
-                        <div class="md:w-1/2 md:pr-8">
-                            <div class="glass-effect p-6 rounded-lg">
-                                <h3 class="text-xl font-bold accent-color mb-2">1. Análisis de Requerimientos</h3>
-                                <p class="text-gray-300">Definición de KPIs clave y preguntas de negocio con los stakeholders de la empresa para entender sus necesidades analíticas.</p>
-                            </div>
-                        </div>
-                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-gray-900 border-2 border-accent-color rounded-full hidden md:flex items-center justify-center">
-                            <i data-lucide="search" class="w-4 h-4 accent-color"></i>
-                        </div>
-                    </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-bold mb-2">Agilidad Inmediata</h3>
+                    <p>Reduce el ciclo de "pregunta-respuesta-decisión" de semanas a minutos, permitiendo reaccionar en tiempo real al mercado.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">🔑</div>
+                    <h3 class="text-xl font-bold mb-2">Acceso para Todos</h3>
+                    <p>Democratiza el acceso a la información, fomentando una cultura de datos y permitiendo que las decisiones se basen en evidencia.</p>
+                </div>
+            </div>
+        </section>
 
-                    <!-- Item 2 -->
-                    <div class="relative mb-8 md:flex items-center">
-                        <div class="md:w-1/2 md:pl-8 md:ml-auto">
-                            <div class="glass-effect p-6 rounded-lg">
-                                <h3 class="text-xl font-bold accent-color mb-2">2. Preparación de Datos</h3>
-                                <p class="text-gray-300">Proceso de ETL para extraer datos de diversas fuentes, limpiarlos, transformarlos y cargarlos en un Data Lake en S3, listos para ser consumidos por QuickSight.</p>
-                            </div>
-                        </div>
-                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-gray-900 border-2 border-accent-color rounded-full hidden md:flex items-center justify-center">
-                            <i data-lucide="database" class="w-4 h-4 accent-color"></i>
-                        </div>
-                    </div>
+        <section id="piloto" class="py-12">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#0A2342]">El Plan del Piloto: Metodología Lean-Agile</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-600">Se ejecutará un piloto controlado de 5 meses (Agosto-Diciembre 2025) utilizando un enfoque híbrido que combina la entrega de valor rápida (Lean) con la adaptabilidad (Agile) para garantizar el éxito y minimizar el riesgo.</p>
+            </div>
+            
+            <div class="relative w-full px-4">
+                <div class="absolute left-1/2 h-full w-0.5 bg-gray-300 -translate-x-1/2"></div>
+                <div class="relative flex flex-col items-center space-y-8">
 
-                    <!-- Item 3 -->
-                    <div class="relative mb-8 md:flex items-center md:justify-end">
-                        <div class="md:w-1/2 md:pr-8">
-                            <div class="glass-effect p-6 rounded-lg">
-                                <h3 class="text-xl font-bold accent-color mb-2">3. Creación de Dashboards</h3>
-                                <p class="text-gray-300">Desarrollo de paneles de control interactivos en QuickSight que visualizan los KPIs definidos, ofreciendo una vista 360° del negocio.</p>
-                            </div>
-                        </div>
-                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-gray-900 border-2 border-accent-color rounded-full hidden md:flex items-center justify-center">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 accent-color"></i>
+                    <div class="relative w-full flex justify-center items-center">
+                        <div class="relative z-10 timeline-dot w-6 h-6 bg-[#0A2342] rounded-full border-4 border-white cursor-pointer"></div>
+                        <div class="timeline-item-content w-64 p-4 bg-[#0A2342] text-white rounded-lg shadow-xl">
+                            <h4 class="font-bold">Fase 1: Planificación (Ago '25)</h4>
+                            <p class="text-sm">Definición del MVP, mapeo del proceso actual y establecimiento de la línea base de métricas.</p>
                         </div>
                     </div>
                     
-                    <!-- Item 4 -->
-                    <div class="relative mb-8 md:flex items-center">
-                        <div class="md:w-1/2 md:pl-8 md:ml-auto">
-                            <div class="glass-effect p-6 rounded-lg">
-                                <h3 class="text-xl font-bold accent-color mb-2">4. Integración de QuickSight Q</h3>
-                                <p class="text-gray-300">Configuración del "Topic" en QuickSight Q, entrenando al modelo de IA con el vocabulario de negocio y sinónimos para optimizar la interpretación del lenguaje natural.</p>
-                            </div>
-                        </div>
-                        <div class="absolute left-1/2 -translate-x-1/2 w-8 h-8 bg-gray-900 border-2 border-accent-color rounded-full hidden md:flex items-center justify-center">
-                           <i data-lucide="brain-circuit" class="w-4 h-4 accent-color"></i>
+                    <div class="relative w-full flex justify-center items-center">
+                        <div class="relative z-10 timeline-dot w-6 h-6 bg-[#0A2342] rounded-full border-4 border-white cursor-pointer"></div>
+                        <div class="timeline-item-content w-64 p-4 bg-[#0A2342] text-white rounded-lg shadow-xl">
+                            <h4 class="font-bold">Fase 2: Implementación (Sep '25)</h4>
+                            <p class="text-sm">Configuración técnica, conexión a 2-3 fuentes de datos críticas y capacitación práctica del equipo piloto.</p>
                         </div>
                     </div>
 
+                    <div class="relative w-full flex justify-center items-center">
+                        <div class="relative z-10 timeline-dot w-6 h-6 bg-[#0A2342] rounded-full border-4 border-white cursor-pointer"></div>
+                        <div class="timeline-item-content w-64 p-4 bg-[#0A2342] text-white rounded-lg shadow-xl">
+                            <h4 class="font-bold">Fase 3: Ejecución (Oct-Nov '25)</h4>
+                            <p class="text-sm">Uso diario de la herramienta con ciclos de retroalimentación semanales (Build-Measure-Learn) para ajustar y mejorar.</p>
+                        </div>
+                    </div>
+
+                     <div class="relative w-full flex justify-center items-center">
+                        <div class="relative z-10 timeline-dot w-6 h-6 bg-[#0A2342] rounded-full border-4 border-white cursor-pointer"></div>
+                        <div class="timeline-item-content w-64 p-4 bg-[#0A2342] text-white rounded-lg shadow-xl">
+                            <h4 class="font-bold">Fase 4: Evaluación (Dic '25)</h4>
+                            <p class="text-sm">Recopilación de datos finales, análisis de impacto y elaboración del informe de valor con recomendación formal.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Resultados -->
-        <section id="resultados" class="py-20 md:py-32 bg-gray-900">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Resultados y <span class="accent-color">Hallazgos</span></h2>
-                    <div class="w-24 h-1 bg-accent-color mx-auto mt-4"></div>
+        <section id="impacto" class="py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#0A2342]">Impacto Esperado: Una Transformación Cuantificable</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-600">El objetivo final es demostrar un valor tangible. Se medirán indicadores clave para cuantificar la mejora en eficiencia, la experiencia del usuario y el impacto directo en las decisiones estratégicas del negocio.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                <h3 class="text-xl font-bold text-center mb-4">Reducción del Tiempo para Obtener Insights</h3>
+                <div class="chart-container">
+                    <canvas id="impactChart"></canvas>
                 </div>
-                
-                <div class="grid md:grid-cols-2 gap-8 items-center mb-12">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-white mb-4">Dashboards Interactivos</h3>
-                        <p class="text-gray-300 leading-relaxed">Se crearon dashboards centralizados que ofrecen visibilidad sobre ventas por región, rendimiento de agentes, y satisfacción del cliente. Estos paneles sirven como la "única fuente de la verdad" para la toma de decisiones.</p>
-                    </div>
-                    <div class="glass-effect p-2 rounded-lg">
-                        <img src="https://placehold.co/600x400/1F2937/2DD4BF?text=Captura+Dashboard+1" alt="Dashboard de Ventas" class="rounded-md w-full">
-                    </div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-lg text-[#0A2342]">✅ Objetivos Específicos</h3>
+                    <ul class="text-left mt-2 space-y-2 list-disc list-inside">
+                        <li>Implementar y validar la plataforma con datos B2C.</li>
+                        <li>Medir la adopción y la capacidad autónoma de los usuarios.</li>
+                        <li>Documentar al menos 2 decisiones estratégicas aceleradas.</li>
+                    </ul>
                 </div>
-
-                <div class="text-center my-20">
-                    <h3 class="text-2xl md:text-3xl font-bold text-white">La <span class="accent-color">Magia</span> de QuickSight Q</h3>
-                    <p class="max-w-3xl mx-auto mt-4 text-gray-300">La verdadera innovación reside en la capacidad de consultar los datos con lenguaje natural. A continuación se muestra un ejemplo del proceso.</p>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-lg text-[#0A2342]">📈 Variables de Negocio</h3>
+                    <ul class="text-left mt-2 space-y-2 list-disc list-inside">
+                        <li>Tarifa Diaria Promedio (ADR)</li>
+                        <li>Margen de Beneficio Bruto (GPM)</li>
+                        <li>Valor Promedio de Reserva (AOV)</li>
+                    </ul>
                 </div>
-
-                <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="glass-effect p-6 rounded-lg">
-                        <div class="flex justify-center mb-4"><i data-lucide="message-square" class="w-12 h-12 accent-color"></i></div>
-                        <h4 class="text-xl font-semibold text-white mb-2">1. El Usuario Pregunta</h4>
-                        <p class="text-gray-400">"¿Cuáles fueron las ventas totales por destino en el último trimestre?"</p>
-                    </div>
-                    <div class="glass-effect p-6 rounded-lg">
-                        <div class="flex justify-center mb-4"><i data-lucide="bot" class="w-12 h-12 accent-color"></i></div>
-                        <h4 class="text-xl font-semibold text-white mb-2">2. La IA Procesa</h4>
-                        <p class="text-gray-400">QuickSight Q interpreta la pregunta, identifica entidades (ventas, destino, tiempo) y consulta el modelo de datos.</p>
-                    </div>
-                    <div class="glass-effect p-6 rounded-lg">
-                        <div class="flex justify-center mb-4"><i data-lucide="bar-chart-3" class="w-12 h-12 accent-color"></i></div>
-                        <h4 class="text-xl font-semibold text-white mb-2">3. Se Genera la Respuesta</h4>
-                        <p class="text-gray-400">El sistema genera automáticamente una visualización (ej. un gráfico de barras) que responde a la pregunta del usuario al instante.</p>
-                    </div>
-                </div>
-                <div class="mt-12 glass-effect p-2 rounded-lg">
-                     <img src="https://placehold.co/1200x600/1F2937/2DD4BF?text=Ejemplo+de+pregunta+y+respuesta+visual+en+QuickSight+Q" alt="Ejemplo de QuickSight Q" class="rounded-md w-full">
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-lg text-[#0A2342]">😊 Métricas de Usuario</h3>
+                    <ul class="text-left mt-2 space-y-2 list-disc list-inside">
+                        <li>Tasa de adopción de la herramienta.</li>
+                        <li>Nivel de satisfacción (encuestas).</li>
+                        <li>Reducción de "puntos de dolor".</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Contacto -->
-        <section id="contacto" class="py-20 md:py-32">
-            <div class="container mx-auto px-6 text-center">
-                <div class="mb-8">
-                    <img src="https://placehold.co/150x150/1F2937/E5E7EB?text=Tu+Foto" alt="Tu Foto" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-accent-color">
-                    <h2 class="text-3xl font-bold text-white">[Tu Nombre Completo]</h2>
-                    <p class="accent-color">Estudiante de la Maestría en Analítica e Inteligencia de Negocios</p>
+        <section id="riesgos" class="py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#0A2342]">Gestión de Riesgos</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-gray-600">Se han identificado y planificado estrategias de mitigación para los riesgos clave del proyecto. Haz clic en cada tarjeta para conocer el plan de acción.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="custom-card relative h-48 cursor-pointer" data-risk="1">
+                    <div class="card-face absolute w-full h-full bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+                        <h4 class="font-bold text-lg">Económico</h4>
+                        <p class="mt-2 text-sm">Fracaso en demostrar el ROI.</p>
+                    </div>
+                    <div class="card-back absolute w-full h-full bg-[#FF8C42] text-white p-6 rounded-lg shadow-lg flex flex-col justify-center text-center">
+                         <p class="text-sm"><strong>Mitigación:</strong> Establecer una línea base clara, documentar "Quick-Wins" y presentar un análisis de impacto final que cuantifique el valor generado.</p>
+                    </div>
                 </div>
-                <p class="max-w-2xl mx-auto text-gray-300 mb-8">
-                    Apasionado por transformar datos en decisiones estratégicas. Este proyecto representa la culminación de mis estudios y mi interés en la aplicación de tecnologías de vanguardia para resolver problemas de negocio reales.
-                </p>
-                <div class="flex justify-center space-x-6">
-                    <a href="https://es.linkedin.com/" target="_blank" class="text-gray-400 hover:accent-color transition-colors">
-                        <i data-lucide="linkedin" class="w-8 h-8"></i>
-                    </a>
-                    <a href="https://www.youtube.com/watch?v=44ziZ12rJwU" target="_blank" class="text-gray-400 hover:accent-color transition-colors">
-                        <i data-lucide="github" class="w-8 h-8"></i>
-                    </a>
-                    <a href="mailto:[tu-email@dominio.com]" class="text-gray-400 hover:accent-color transition-colors">
-                        <i data-lucide="mail" class="w-8 h-8"></i>
-                    </a>
+                <div class="custom-card relative h-48 cursor-pointer" data-risk="2">
+                    <div class="card-face absolute w-full h-full bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+                        <h4 class="font-bold text-lg">Social (Adopción)</h4>
+                        <p class="mt-2 text-sm">Baja adopción o resistencia al cambio.</p>
+                    </div>
+                    <div class="card-back absolute w-full h-full bg-[#FF8C42] text-white p-6 rounded-lg shadow-lg flex flex-col justify-center text-center">
+                         <p class="text-sm"><strong>Mitigación:</strong> Involucrar a los usuarios desde el inicio, dar capacitación práctica y ofrecer soporte continuo con retroalimentación semanal.</p>
+                    </div>
+                </div>
+                <div class="custom-card relative h-48 cursor-pointer" data-risk="3">
+                    <div class="card-face absolute w-full h-full bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+                        <h4 class="font-bold text-lg">Metodológico</h4>
+                        <p class="mt-2 text-sm">Calidad de datos deficiente o fallos de IA.</p>
+                    </div>
+                    <div class="card-back absolute w-full h-full bg-[#FF8C42] text-white p-6 rounded-lg shadow-lg flex flex-col justify-center text-center">
+                         <p class="text-sm"><strong>Mitigación:</strong> Limitar el piloto a 2-3 fuentes de datos críticas para asegurar su calidad y crear guías de "mejores prácticas" para interactuar con la IA.</p>
+                    </div>
+                </div>
+                <div class="custom-card relative h-48 cursor-pointer" data-risk="4">
+                    <div class="card-face absolute w-full h-full bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+                        <h4 class="font-bold text-lg">Ético y Seguridad</h4>
+                        <p class="mt-2 text-sm">Uso indebido de datos o brechas de seguridad.</p>
+                    </div>
+                    <div class="card-back absolute w-full h-full bg-[#FF8C42] text-white p-6 rounded-lg shadow-lg flex flex-col justify-center text-center">
+                        <p class="text-sm"><strong>Mitigación:</strong> Implementar controles de acceso estrictos basados en el principio de menor privilegio, asegurando que cada usuario acceda solo a la información necesaria.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-900 py-8">
-        <div class="container mx-auto px-6 text-center text-gray-500">
-            <p>&copy; 2024 [Tu Nombre]. Todos los derechos reservados.</p>
-            <p class="text-sm mt-2">Sitio web diseñado como parte del proyecto final de maestría.</p>
-        </div>
+    <footer class="bg-[#0A2342] text-white text-center p-6 mt-12">
+        <p>Proyecto Terminal de Maestría en Analítica e Inteligencia de Negocios.</p>
+        <p>&copy; 2025 Carlos Enrique Oxte Manzanero</p>
     </footer>
 
     <script>
-        // Inicializar Lucide Icons
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleProcessBtn = document.getElementById('toggleProcessBtn');
+            const procesoActual = document.getElementById('proceso-actual');
+            const procesoNuevo = document.getElementById('proceso-nuevo');
 
-        // Lógica para el header que cambia de color al hacer scroll
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('glass-effect');
-            } else {
-                header.classList.remove('glass-effect');
-            }
-        });
+            toggleProcessBtn.addEventListener('click', () => {
+                const isNuevoVisible = !procesoNuevo.classList.contains('hidden');
+                if (isNuevoVisible) {
+                    procesoNuevo.classList.add('hidden');
+                    procesoActual.classList.remove('hidden');
+                    toggleProcessBtn.textContent = 'Ver el Nuevo Proceso ⚡';
+                    toggleProcessBtn.classList.remove('bg-[#FF8C42]');
+                    toggleProcessBtn.classList.add('bg-[#0A2342]');
+                } else {
+                    procesoActual.classList.add('hidden');
+                    procesoNuevo.classList.remove('hidden');
+                    toggleProcessBtn.textContent = 'Volver al Proceso Actual ⏳';
+                    toggleProcessBtn.classList.remove('bg-[#0A2342]');
+                    toggleProcessBtn.classList.add('bg-[#FF8C42]');
+                }
+            });
 
-        // Lógica para el menú móvil
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            const impactChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Proceso Actual', 'Proceso con QuickSight Q'],
+                    datasets: [{
+                        label: 'Tiempo Promedio (Días)',
+                        data: [14, 0.007],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Tiempo en Días (Escala Logarítmica)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.parsed.y;
+                                    if (value < 1) {
+                                        return ` ~${(value * 24 * 60).toFixed(0)} minutos`;
+                                    }
+                                    return ` ~${value.toFixed(0)} días`;
+                                }
+                            }
+                        },
+                        legend: {
+                           display: false
+                        }
+                    }
+                }
+            });
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
+            const riskCards = document.querySelectorAll('.custom-card');
+            riskCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('is-flipped');
+                });
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const navLinks = document.querySelectorAll('#mobile-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
             });
         });
-
     </script>
 </body>
 </html>
